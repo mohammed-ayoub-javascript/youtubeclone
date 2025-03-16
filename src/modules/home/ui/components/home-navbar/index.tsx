@@ -4,8 +4,11 @@ import Link from 'next/link'
 import React from 'react'
 import SearchInput from '@/modules/home/ui/components/home-navbar/search-input'
 import { AuthButton } from '@/modules/auth/ui/components/auth-button'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/options'
 
-const HomeNavbar = () => {
+const HomeNavbar = async () => {
+  const session = await getServerSession(authOptions);
   return (
     <nav className=' fixed top-0 left-0 right-0 h-16 bg-white flex items-center px-2 pr-4 z-50'>
         <div className=' flex items-center gap-4 w-full'>
@@ -27,7 +30,17 @@ const HomeNavbar = () => {
             </div>
 
             <div className=' flex-shrink-0 items-center flex gap-4'>
+                {session?.user?.email && (
+                    <img 
+                    src={session.user.image as string} 
+                    className=' rounded-full cursor-pointer' 
+                    width={35} 
+                    height={35} 
+                    alt=""  />
+                )}
+                {!session?.user?.email && (
                 <AuthButton />
+                )}
             </div>
         </div>
     </nav>
